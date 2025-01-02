@@ -126,7 +126,7 @@ def run():
     if st.button('Generate top'):
         # Generate yearly top
         agg_top = aggregated_top(year)
-        romtop_agg_list = sorted([romtop_aggregate_year[id] for id in romtop_aggregate_year], key=lambda x: x[OPTIONS_TRANSLATOR[option]], reverse=True)
+        romtop_agg_list = sorted([agg_top[id] for id in agg_top], key=lambda x: x[OPTIONS_TRANSLATOR[option]], reverse=True)
         place = 0
         for final_entry in romtop_agg_list:
             place += 1
