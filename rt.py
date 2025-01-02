@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import streamlit as st
 
 ROOTPAGE = "https://www.radiotrib.ro/radiotrib/romtop/arhiva?itemId=Romtop_Edition:"
 
@@ -131,9 +132,24 @@ def aggregated_top(year):
               final_entry["highest_pos"],
               final_entry["weeks_at_no1"])
 
+def run():
+    st.title('RomTop yearly aggregator')
+    st.write('Introduce the year to aggregate')
 
+    # User input
+    year = st.number_input('Year (YYYY)',
+                           min_value=2015,
+                           max_value=2024,
+                           value=2024)
+    if st.button('Generate top'):
+        # Generate yearly top
+        aggregated_top(year)
+        # Show generated top
+        st.success('Top was generated!')
+    
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    run()
     # download editions from the site
     # for ed in range(503):
     #     print("Editia ", str(ed))
@@ -146,11 +162,11 @@ if __name__ == '__main__':
     # read_and_parse_from_html()
 
     #generate year aggregated top
-    aggregated_top(2024)
+    # aggregated_top(2024)
 
 
-data = [{"place": 1,
-         "artist": "Blazzaj",
-         "song-name": "PLUSUNU",
-         "entry_type": "Top30"}
-]
+# data = [{"place": 1,
+#          "artist": "Blazzaj",
+#          "song-name": "PLUSUNU",
+#          "entry_type": "Top30"}
+# ]
