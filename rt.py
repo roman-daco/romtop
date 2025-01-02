@@ -5,6 +5,10 @@ import streamlit as st
 
 ROOTPAGE = "https://www.radiotrib.ro/radiotrib/romtop/arhiva?itemId=Romtop_Edition:"
 
+OPTIONS_TRANSLATOR = {
+    'Total Points': 'points',
+    'Average Points': 'avg_points'
+}
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -105,32 +109,7 @@ def aggregated_top(year):
                 romtop_aggregate_year[entry_id]["points"] += 31 - entry_place
     for entry_id in romtop_aggregate_year:
         romtop_aggregate_year[entry_id]["avg_points"] = int(float(romtop_aggregate_year[entry_id]["points"])/romtop_aggregate_year[entry_id]["weeks"]*100)/100.0
-    romtop_agg_list = sorted([romtop_aggregate_year[id] for id in romtop_aggregate_year], key=lambda x: x["points"], reverse=True)
-    place = 0
-    for final_entry in romtop_agg_list:
-        place += 1
-        print(place,
-              final_entry["artist"],
-              "-",
-              final_entry["song-name"],
-              final_entry["points"],
-              final_entry["avg_points"],
-              final_entry["weeks"],
-              final_entry["highest_pos"],
-              final_entry["weeks_at_no1"])
-    romtop_agg_list = sorted([romtop_aggregate_year[id] for id in romtop_aggregate_year], key=lambda x: x["avg_points"], reverse=True)
-    place = 0
-    for final_entry in romtop_agg_list:
-        place += 1
-        print(place,
-              final_entry["artist"],
-              "-",
-              final_entry["song-name"],
-              final_entry["points"],
-              final_entry["avg_points"],
-              final_entry["weeks"],
-              final_entry["highest_pos"],
-              final_entry["weeks_at_no1"])
+    return romtop_aggregate_year
 
 def run():
     st.title('RomTop yearly aggregator')
@@ -141,11 +120,17 @@ def run():
                            min_value=2015,
                            max_value=2024,
                            value=2024)
+    option = st.selectbox('Sort by:',
+                          ('Total Points', 'Average Points')
+                         )
     if st.button('Generate top'):
         # Generate yearly top
-        aggregated_top(year)
-        # Show generated top
-        st.success('Top was generated!')
+        agg_top = aggregated_top(year)
+        romtop_agg_list = sorted([romtop_aggregate_year[id] for id in romtop_aggregate_year], key=lambda x: x[OPTIONS_TRANSLATOR[option]], reverse=True)
+        place = 0
+        for final_entry in romtop_agg_list:
+            place += 1
+            st.success(str(place) + final_entry["artist"] + "-" + final_entry["song-name"] + str(final_entry["points"]) + str(final_entry["avg_points"]) + str(final_entry["weeks"]) + str(final_entry["highest_pos"]) + str(final_entry["weeks_at_no1"]))
     
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
